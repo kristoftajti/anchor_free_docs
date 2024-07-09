@@ -1,2 +1,2 @@
 # Anchor-free object detection basics
-- [FCOS](data/FCOS.md) 
+- [FCOS: Fully Convolutional One-Stage Object Detection](data/FCOS.md) 
