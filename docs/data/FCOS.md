@@ -1,5 +1,22 @@
+<!-- Button to go back to the main page -->
+<div style="margin-top: 20px;">
+  <a href="index.md" style="text-decoration: none;">
+    <button style="
+      background-color: #4CAF50; /* Green */
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+      font-size: 16px;
+      cursor: pointer;
+    ">Back to Main Page</button>
+  </a>
+</div>
+
 # FCOS paper review
-### official link - https://arxiv.org/pdf/1904.01355
+### official link - [https://arxiv.org/pdf/1904.01355](https://arxiv.org/pdf/1904.01355)
 ## Downsides of anchor-based detectors
 
 - Difficulties to deal with objects having large shape variations
@@ -51,6 +68,9 @@ And $L_{\text{reg}}$ is the regression loss, IoU loss as of rightnow
 $$\text{IoULoss}(B_{\text{pred}}, B_{\text{gt}}) = 1 - \frac{|B_{\text{pred}} \cap B_{\text{gt}}|}{|B_{\text{pred}} \cup B_{\text{gt}}|}$$
 
 The indicator function $$\mathbf{1}_{\{c^*_{x,y} > 0\}}$$​ ensures that the regression loss is only computed for positive samples (i.e., locations that belong to an object).
+
+
+###  Multi-level Prediction with FPN
 
 
 
