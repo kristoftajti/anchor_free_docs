@@ -1,6 +1,6 @@
 <!-- Button to go back to the main page -->
 <div style="margin-top: 20px;">
-  <a href="../index.md" style="text-decoration: none;">
+  <a href="./index.md" style="text-decoration: none;">
     <button style="
       background-color: #4CAF50; /* Green */
       border: none;
@@ -25,7 +25,7 @@
 - Complicated calculations are needed (IoU /w GTs)
 - Many avoidable hyper-parameters (IoU threshold)
 
-## Apporach
+## Approach
 ### Fully Convolutional One-Stage Detector
 #### Feature Maps and Ground-Truth Bounding Boxes
 
@@ -83,3 +83,13 @@ where $m_2, m_3, m_4, m_5, m_6 \text{ and } m_7$ are set as 0, 64, 128, 256, 512
 
 ### Center-ness for FCOS
 
+Even with multi-level prediction using FPN, FCOS can still produce low-quality bounding boxes, especially at locations far from the center of the object. To adress this issue, the authors have proposed a novel so called center-ness branch, which runs in paralell with the classification branch.
+
+![Alt text](/docs/data/fcos_architecture.png?raw=true)
+
+The center-ness score is designed to measure the distance of a location from the center of an object. Locations near the edges of the bounding box are given lower scores, while those near the center are given higher scores, calculated with the formula below:
+
+$$\text{centerness}^* = \sqrt{\frac{\min(l^*, r^*)}{\max(l^*, r^*)} \times \frac{\min(t^*, b^*)}{\max(t^*, b^*)}}
+$$
+
+$sqrt$ is applied to slow down the decay of center-ness. As the center-ness ranges from 0 to 1, it is trained with binary cross entropy loss, and this is added to the aforementioned loss. It is also important to note, that during inference time, the final score for ranking boxes is computed by multiplying the predicted center-ness with the corresponding classification score, thus lower quality boxes will be ranked lower and filter out by NMS.
