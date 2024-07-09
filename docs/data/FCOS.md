@@ -1,6 +1,6 @@
 <!-- Button to go back to the main page -->
 <div style="margin-top: 20px;">
-  <a href="/index.md" style="text-decoration: none;">
+  <a href="../index.md" style="text-decoration: none;">
     <button style="
       background-color: #4CAF50; /* Green */
       border: none;
@@ -72,5 +72,14 @@ The indicator function $$\mathbf{1}_{\{c^*_{x,y} > 0\}}$$​ ensures that the re
 
 ###  Multi-level Prediction with FPN
 
+FCOS uses a 5 level FPN ${P3, P4, P5, P6\text{ and } P7}$, each of which have different resolutions and are responsible for detecting objects of different sizes. ${P3, P4 \text{ and } P5}$ are derived from the backbone and are followed by a $1x1$ convolution. $P6 \text{ and } P7$ are calculated from $P5, P6$ respectively with convolution having a stride of 2. The aforementioned way, each level has a different downsampling factor from 8 to 128 and each feature level regresses targets ($l^*, t^*, r^*, b^*$).
 
+A location is considered a negative sample ($(x, y)$) if
+
+$$max(l^*, t^*, r^*, b^*) > m_i \text{ or }$$
+$$max(l^*, t^*, r^*, b^*) < m_{i-1}$$
+
+where $m_2, m_3, m_4, m_5, m_6 \text{ and } m_7$ are set as 0, 64, 128, 256, 512 and $∞$, respectively. This greatly reduces the problem mentioned in the section above, having a location $(x, y)$ at multiple GT boxes at once, although it is important to emphasize that in case this does happen, we still take the box with the smaller area.
+
+### Center-ness for FCOS
 
