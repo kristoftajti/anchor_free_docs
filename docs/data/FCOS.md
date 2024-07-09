@@ -72,24 +72,24 @@ The indicator function $$\mathbf{1}_{\{c^*_{x,y} > 0\}}$$​ ensures that the re
 
 ###  Multi-level Prediction with FPN
 
-FCOS uses a 5 level FPN ${P3, P4, P5, P6\text{ and } P7}$, each of which have different resolutions and are responsible for detecting objects of different sizes. ${P3, P4 \text{ and } P5}$ are derived from the backbone and are followed by a $1x1$ convolution. $P6 \text{ and } P7$ are calculated from $P5, P6$ respectively with convolution having a stride of 2. The aforementioned way, each level has a different downsampling factor from 8 to 128 and each feature level regresses targets ($$l^*, t^*, r^*, b^*$$).
+FCOS uses a 5 level FPN ${P3, P4, P5, P6\text{ and } P7}$, each of which have different resolutions and are responsible for detecting objects of different sizes. ${P3, P4 \text{ and } P5}$ are derived from the backbone and are followed by a $1x1$ convolution. $P6 \text{ and } P7$ are calculated from $P5, P6$ respectively with convolution having a stride of 2. The aforementioned way, each level has a different downsampling factor ranging from 8 to 128 and each feature level regresses targets ($$l^*, t^*, r^*, b^*$$).
 
-A location is considered a negative sample ($(x, y)$) if
+A location is considered a negative sample ($(x, y)$) if:
 
 $$max(l^*, t^*, r^*, b^*) > m_i \text{ or }$$
 $$max(l^*, t^*, r^*, b^*) < m_{i-1}$$
 
-where $m_2, m_3, m_4, m_5, m_6 \text{ and } m_7$ are set as 0, 64, 128, 256, 512 and $∞$, respectively. This greatly reduces the problem mentioned in the section above, having a location $(x, y)$ at multiple GT boxes at once, although it is important to emphasize that in case this does happen, we still take the box with the smaller area.
+where $m_2, m_3, m_4, m_5, m_6 \text{ and } m_7$ are set as 0, 64, 128, 256, 512 and $∞$, respectively. This greatly reduces the problem mentioned in the section above, having a location $(x, y)$ at multiple GT boxes at once, although it is important to emphasize that in case this does happen, we still take the box with the smallest area.
 
 ### Center-ness for FCOS
 
 Even with multi-level prediction using FPN, FCOS can still produce low-quality bounding boxes, especially at locations far from the center of the object. To adress this issue, the authors have proposed a novel so called center-ness branch, which runs in paralell with the classification branch.
 
-![Alt text](/docs/data/fcos_architecture.png?raw=true)
+![Alt text](/docs/assets/images/fcos_architecture.png?raw=true)
 
 The center-ness score is designed to measure the distance of a location from the center of an object. Locations near the edges of the bounding box are given lower scores, while those near the center are given higher scores, calculated with the formula below:
 
 $$\text{centerness}^* = \sqrt{\frac{\min(l^*, r^*)}{\max(l^*, r^*)} \times \frac{\min(t^*, b^*)}{\max(t^*, b^*)}}
 $$
 
-$sqrt$ is applied to slow down the decay of center-ness. As the center-ness ranges from 0 to 1, it is trained with binary cross entropy loss, and this is added to the aforementioned loss. It is also important to note, that during inference time, the final score for ranking boxes is computed by multiplying the predicted center-ness with the corresponding classification score, thus lower quality boxes will be ranked lower and filter out by NMS.
+$sqrt$ is applied to slow down the decay of center-ness. As the center-ness ranges from 0 to 1, it is trained with binary cross entropy loss, and this is added to the aforementioned loss. It is also important to note, that during inference time, the final score for ranking boxes is computed by multiplying the predicted center-ness with the corresponding classification score, thus lower quality boxes will be ranked lower and filtered out by NMS.
