@@ -2,3 +2,6 @@
 title: AnchorFree
 description: AnchorFree.
 theme: jekyll-theme-cayman
+markdown: kramdown
+kramdown:
+    math_engine: katex
