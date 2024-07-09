@@ -35,6 +35,10 @@ In the network output, all targets are positive and due to this reason, all $x$ 
 #### Loss Function
 $L(\{p_{x,y}\}, \{t_{x,y}\}) = \frac{1}{N_{\text{pos}}} \sum_{x,y} L_{\text{cls}}(p_{x,y}, c^*_{x,y}) + \lambda \frac{1}{N_{\text{pos}}} \sum_{x,y} \mathbf{1}_{\{c^*_{x,y} > 0\}} L_{\text{reg}}(t_{x,y}, t^*_{x,y})$
 
+\[
+L(\{p_{x,y}\}, \{t_{x,y}\}) = \frac{1}{N_{\text{pos}}} \sum_{x,y} L_{\text{cls}}(p_{x,y}, c^*_{x,y}) + \lambda \frac{1}{N_{\text{pos}}} \sum_{x,y} \mathbf{1}_{\{c^*_{x,y} > 0\}} L_{\text{reg}}(t_{x,y}, t^*_{x,y})
+\]
+
 Where $L_{\text{cls}}$ is the classification loss term, being focal loss in the original paper 
 
 - $FocalLoss(p,c^*) = -α(1−p)^γlog(p)$ if $c^*=1$
