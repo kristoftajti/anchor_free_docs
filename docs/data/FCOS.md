@@ -72,7 +72,7 @@ The indicator function $$\mathbf{1}_{\{c^*_{x,y} > 0\}}$$​ ensures that the re
 
 ###  Multi-level Prediction with FPN
 
-FCOS uses a 5 level FPN ${P3, P4, P5, P6\text{ and } P7}$, each of which have different resolutions and are responsible for detecting objects of different sizes. ${P3, P4 \text{ and } P5}$ are derived from the backbone and are followed by a $1x1$ convolution. $P6 \text{ and } P7$ are calculated from $P5, P6$ respectively with convolution having a stride of 2. The aforementioned way, each level has a different downsampling factor from 8 to 128 and each feature level regresses targets ($l^*, t^*, r^*, b^*$).
+FCOS uses a 5 level FPN ${P3, P4, P5, P6\text{ and } P7}$, each of which have different resolutions and are responsible for detecting objects of different sizes. ${P3, P4 \text{ and } P5}$ are derived from the backbone and are followed by a $1x1$ convolution. $P6 \text{ and } P7$ are calculated from $P5, P6$ respectively with convolution having a stride of 2. The aforementioned way, each level has a different downsampling factor from 8 to 128 and each feature level regresses targets ($$l^*, t^*, r^*, b^*$$).
 
 A location is considered a negative sample ($(x, y)$) if
 
