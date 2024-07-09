@@ -40,9 +40,9 @@ $$L(\{p_{x,y}\}, \{t_{x,y}\}) = \frac{1}{N_{\text{pos}}} \sum_{x,y} L_{\text{cls
 
 Where $L_{\text{cls}}$ is the classification loss term, being focal loss in the original paper 
 
-$FocalLoss(p,c^*) = -α(1−p)^γlog(p)$ if $c^*=1$
+$$FocalLoss(p,c^*) = -α(1−p)^γlog(p) \text{ if }  c^*=1$$
 
-$FocalLoss(p,c^*) = -(1-α)p^γlog(1-p)$ if $c^*=0$
+$$FocalLoss(p,c^*) = -(1-α)p^γlog(1-p) \text{ if } c^*=0$$
 
 $p$ being the predicted class label and $c^*$ is the GT one 
 
