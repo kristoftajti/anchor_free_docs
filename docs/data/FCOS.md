@@ -1,6 +1,6 @@
 <!-- Button to go back to the main page -->
 <div style="margin-top: 20px;">
-  <a href="./index.md" style="text-decoration: none;">
+  <a href=".../index.md" style="text-decoration: none;">
     <button style="
       background-color: #4CAF50; /* Green */
       border: none;
@@ -85,7 +85,7 @@ where $m_2, m_3, m_4, m_5, m_6 \text{ and } m_7$ are set as 0, 64, 128, 256, 512
 
 Even with multi-level prediction using FPN, FCOS can still produce low-quality bounding boxes, especially at locations far from the center of the object. To adress this issue, the authors have proposed a novel so called center-ness branch, which runs in paralell with the classification branch.
 
-![Alt text](/docs/assets/images/fcos_architecture.png)
+![Architecture](docs/assets/images/fcos_architecture.png)
 
 The center-ness score is designed to measure the distance of a location from the center of an object. Locations near the edges of the bounding box are given lower scores, while those near the center are given higher scores, calculated with the formula below:
 
