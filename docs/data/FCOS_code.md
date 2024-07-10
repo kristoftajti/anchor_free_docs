@@ -41,7 +41,7 @@ for i in range(cfg.MODEL.FCOS.NUM_CONVS):
     bbox_tower.append(nn.ReLU())
 ````
 
-The end of both towers are 2d convolutions, the cls_tower with num_classes output, the bbox_tower with 4 ($t^*, b^*, r^*, b^*$) and a centerness also ending with a 2d convolution of outputsize 1, as we want 1 number inbetween 0 and 1.
+The end of both towers are 2d convolutions, the cls_tower with num_classes output, the bbox_tower with 4 ($$t^*, b^*, r^*, b^*$$) and a centerness also ending with a 2d convolution of outputsize 1, as we want 1 number inbetween 0 and 1.
 
 In the forward call, the centerness is calculated from the output of the cls_tower (optionall one can use the regression branch for it, but this one is mentioned in the paper). The head returns logits **(shape of num_classes)**, bbox_reg **(shape of 4)**, centerness **(shape of 1)**
 
