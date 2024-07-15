@@ -75,3 +75,16 @@ Cascade corner pooling enhances the standard method by allowing corners to incor
 
 ## Loss
 
+$$L = L_{\text{det}}^\text{co} + L_{\text{det}}^\text{ce} + \alpha L_{\text{pull}}^\text{co} + \beta L_{\text{push}}^\text{co} + \gamma (L_{\text{off}}^\text{co} + L_{\text{off}}^\text{ce})$$
+
+$L_{\text{det}}^\text{co}, L_{\text{det}}^\text{ce}$ denote focal losses used to train the network to detect corners and center keypoints, respectively. This is a focal loss variant defiend in CornerNet, calculated as follows:
+
+TODO
+
+$L_\text{pull}$ is used to group corners from the same object to have as similar embedding as possible. Let  $e_{tk}$ be the embedding for the top-left corner of object $k$ and $e_{bk}$ be for the bottom-right corner and $e_k$ is the average of $e_{tk}$ and $e_{bk}$.
+
+$$ L_\text{pull} = \frac{1}{N} \sum_{k=1}^{N} \left[ (e_{tk} - e_k)^2 + (e_{bk} - e_k)^2 \right]$$
+
+$L_\text{push}$ is used to push the unrelated points' embedding far from eachother. $\Delta$ was set to 1.
+
+$$L_{\text{push}} = \frac{1}{N (N - 1)} \sum_{k=1}^{N} \sum_{\substack{j=1 \\ j \ne k}}^{N} \max(0, \Delta - |e_k - e_j|)$$
