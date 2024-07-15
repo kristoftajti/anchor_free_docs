@@ -49,7 +49,7 @@ CenterNet uses center pooling and cascade corner pooling as well.
 
 The backbone outputs a feature map, and to determine if a pixel in the feature map is a center keypoint, we need to find the maximum value in its both horizontal and vertical directions and add them together. By doing this, center pooling helps the better detection of center keypoints.
 
-![CenterPooling](./assets/images/center_pooling.png)
+![CenterPooling](https://github.com/kristoftajti/anchor_free_docs/blob/main/docs/assets/images/center_pooling.png)
 
 ## Cascade corner pooling 
 
