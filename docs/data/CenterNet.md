@@ -39,7 +39,20 @@ $$
 
 Where $tl_x \text{ and } tl_y$ are the top-left coordinates, $br_x \text{ and } br_y$ are the bottom-right coordinates and $ctl_x, ctl_y, cbr_x \text { and } cbr_y$ are the central regions coordinates and $n$ is an odd number that is the scale of the central region. In CenterNet $n$ is set to be 3 and 5 for scales of bboxes less and grater than 150.
 
-## CornerNet - Corner Pooling
+
+
+## Enriching Center and Corner Information
+
+CenterNet uses center pooling and cascade corner pooling as well.
+
+### Center pooling
+
+The backbone outputs a feature map, and to determine if a pixel in the feature map is a center keypoint, we need to find the maximum value in its both horizontal and vertical directions and add them together. By doing this, center pooling helps the better detection of center keypoints.
+
+![CenterPooling](/docs/assets/images/center_pooling.png)
+
+## Cascade corner pooling 
+
 As CenterNets cascade corner pooling relies heavily on CornerNets corner pooling, I feel like it is essential to discuss that first. Corner pooling ([CornerNet paper - section 3.4](https://arxiv.org/pdf/1808.01244)), for instance to determine if feature vector **f** is a top-left corner at $(i,j)$, maxpools right to $(i,j)$ and downwards from it, then sums it. 
 
 $$
@@ -51,3 +64,4 @@ h(i, j) &= h_1(i, j) + h_2(i, j)
 $$
 
 The same is done for the bottom-right corner, but with upward and leftward pooling and addition. This kind of pooling help  accurately localizing corners, especially in cases where local evidence is insufficient (meaning the objects edges are hard to determine).
+
