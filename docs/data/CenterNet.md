@@ -1,6 +1,6 @@
 <!-- Button to go back to the main page -->
 <div style="margin-top: 20px;">
-  <a href=".../index.md" style="text-decoration: none;">
+  <a href="../index.md" style="text-decoration: none;">
     <button style="
       background-color: #4CAF50; /* Green */
       border: none;
@@ -51,7 +51,7 @@ The backbone outputs a feature map, and to determine if a pixel in the feature m
 
 ![CenterPooling](../assets/images/center_pooling.png)
 
-## Cascade corner pooling 
+### Cascade corner pooling 
 
 As CenterNets cascade corner pooling relies heavily on CornerNets corner pooling, I feel like it is essential to discuss that first. Corner pooling ([CornerNet paper - section 3.4](https://arxiv.org/pdf/1808.01244)), for instance to determine if feature vector **f** is a top-left corner at $(i,j)$, maxpools right to $(i,j)$ and downwards from it, then sums it. 
 
@@ -63,5 +63,15 @@ h(i, j) &= h_1(i, j) + h_2(i, j)
 \end{align*}
 $$
 
-The same is done for the bottom-right corner, but with upward and leftward pooling and addition. This kind of pooling help  accurately localizing corners, especially in cases where local evidence is insufficient (meaning the objects edges are hard to determine).
+The same is done for the bottom-right corner, but with upward and leftward pooling and addition. This kind of pooling help  accurately localizing corners, especially in cases where local evidence is insufficient (meaning the objects edges are hard to determine). But this method is sensitive to edges and might miss the internal visual patterns of objects.
+
+Cascade corner pooling enhances the standard method by allowing corners to incorporate internal object features.
+
+- First, find the maximum value along the boundary direction (same as the standard corner pooling).
+- Next, look inside the object along the position of the boundary maximum value to find an internal maximum value.
+- Finally, add the boundary maximum value and the internal maximum value together.
+
+![CenterPooling](../assets/images/cascade_corner_pooling.png)
+
+## Loss
 

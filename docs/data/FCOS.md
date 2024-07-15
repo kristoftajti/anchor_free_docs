@@ -1,6 +1,6 @@
 <!-- Button to go back to the main page -->
 <div style="margin-top: 20px;">
-  <a href=".../index.md" style="text-decoration: none;">
+  <a href="../index.md" style="text-decoration: none;">
     <button style="
       background-color: #4CAF50; /* Green */
       border: none;
