@@ -57,7 +57,7 @@ Then the **_forward_train** function calculates classification, regression and c
 
 ### FCOSHead
 
-The head is instansiated in the FCOSModule, with in_channels param, which is a hyper-parameter. We do have two "towers", one for classification and one for regression, both with $N$ number of $inchannel \times inchannel$  convolutions.
+The head is instansiated in the FCOSModule, with in_channels param, which is a hyper-parameter. We have two "towers", one for classification and one for regression, both with $N$ number of $inchannel \times inchannel$  convolutions.
 
 ````python
 cls_tower = []
@@ -97,7 +97,7 @@ for i in range(cfg.MODEL.FCOS.NUM_CONVS):
 
 The end of both towers are 2d convolutions, the cls_tower with num_classes output, the bbox_tower with 4 ($$t^*, b^*, r^*, b^*$$) and a centerness also ending with a 2d convolution of outputsize 1, as we want 1 number inbetween 0 and 1.
 
-In the forward call, the centerness is calculated from the output of the cls_tower (optionall one can use the regression branch for it, but this one is mentioned in the paper). The head returns logits **(shape of num_classes)**, bbox_reg **(shape of 4)**, centerness **(shape of 1)**
+In the forward call, the centerness is calculated from the output of the cls_tower (optionally one can use the regression branch for it). The head returns logits **(shape of num_classes)**, bbox_reg **(shape of 4)**, centerness **(shape of 1)**
 
 ````python
 def forward(self, x):
@@ -141,7 +141,7 @@ reg_targets_per_im = torch.stack([l, t, r, b], dim=2)
 ...
 ````
 
-Then filter those boxes which are not in the allowed radious of the GT boxes center point (in case this **center_sampling_radius**, but let's get real, it needs to be set), plus filter with the range for each level that is provided and finally in case we still have ambigous cases, we take the box with the smallest area.
+Then filter those boxes which are not in the allowed radious of the GT boxes center point (in case **center_sampling_radius** is set, but let's get real, it needs to be set), plus filter with the range for each level that is provided, and finally in case we still have ambigous cases, we take the box with the smallest area.
 
 ````python
 for im_i in range(len(targets)):
@@ -183,7 +183,7 @@ for level in range(len(points)):
 return labels_level_first, reg_targets_level_first
 ````
 
-After creating the labels and targets, we get back to the **call** , we flatten and premute the pred labels and targets so that we can concat them for more efficient computing, and then we get the positive samples and filter the predictions to only include positive samples.
+After creating the labels and targets, we get back to the **call** , we flatten and premute the predictions so that we can concat them for more efficient computing, and then we get the positive samples and filter the predictions to only include positive samples.
 
 ````python
 pos_inds = torch.nonzero(labels_flatten > 0).squeeze(1)

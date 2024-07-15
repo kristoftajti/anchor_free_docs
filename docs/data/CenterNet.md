@@ -20,11 +20,11 @@
 
 ## Object Detection as Keypoint Triplets
 
-Each object is represented by a center keypoint, which we embed as a heatmap, and a pair of corners (top-left and bottom-right). After predicting, the top-k bounding boxes are selected, which then are filtered. The procedure of filtering as follows:
+Each object is represented by a center keypoint, which we embed as a heatmap and a pair of corners (top-left and bottom-right). After predicting, the top-k bounding boxes are selected, which then are filtered. The procedure of filtering as follows:
 
-    - Remap center keypoint to the original image, with the help of their offsets
-    - Define a central region for each bbox and check whether it contains the aforementioned center keypoint
-    - If it is inside a central region and the classes are the same, we preserve it, and the score of the bbox will be the averaged of the three point(top-left, center, bottom-right)
+ - Remap center keypoint to the original image, with the help of their offsets
+ - Define a central region for each bbox and check whether it contains the aforementioned center keypoint
+ - If it is inside a central region and the classes are the same, we preserve it, and the score of the bbox will be the averaged of the three point(top-left, center, bottom-right)
 
 Central region in the bbox affects detection results. For example, smaller central regions lead to a low recall rate for small bounding boxes, while larger central regions lead to a low precision for large bounding boxes. A scale-aware central region is proposed, which adresses the issue mentioned before
 
