@@ -5,7 +5,7 @@
 
 Includes the FCOShead, loss_evaluator, and the box_selector_test, which is only used when running inference.
 
-the **forward** call of the FCOSModule looks quite simple, predicts the incoming features from the backbone with the FCOSHead, where the features are a list of tensors, with tensors for each level we are predicting at.
+The **forward** call of the FCOSModule looks quite simple, predicts the incoming features from the backbone with the FCOSHead, where the features are a list of tensors, with tensors for each level we are predicting at.
 
 ````python
 def forward(self, images, features, targets=None):
@@ -182,3 +182,17 @@ for level in range(len(points)):
 ...
 return labels_level_first, reg_targets_level_first
 ````
+
+After creating the labels and targets, we get back to the **call** , we flatten and premute the pred labels and targets so that we can concat them for more efficient computing, and then we get the positive samples and filter the predictions to only include positive samples.
+
+````python
+pos_inds = torch.nonzero(labels_flatten > 0).squeeze(1)
+
+box_regression_flatten = box_regression_flatten[pos_inds]
+reg_targets_flatten = reg_targets_flatten[pos_inds]
+centerness_flatten = centerness_flatten[pos_inds]
+````
+
+The cls_loss (classification) is calculated with **SigmoidFocalLoss**, and the regression loss is **IOULoss**, while the centerness loss is **BCEWithLogitsLoss**. All is normalized with the number of positive samples.
+
+Inference.py is not discussed here, might be in the future in case it is needed.
