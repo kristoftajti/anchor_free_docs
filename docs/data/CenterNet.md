@@ -79,7 +79,14 @@ $$L = L_{\text{det}}^\text{co} + L_{\text{det}}^\text{ce} + \alpha L_{\text{pull
 
 $L_{\text{det}}^\text{co}, L_{\text{det}}^\text{ce}$ denote focal losses used to train the network to detect corners and center keypoints, respectively. This is a focal loss variant defiend in CornerNet, calculated as follows:
 
-TODO
+$$L_{\text{det}} = -\frac{1}{N} \sum_{c=1}^{C} \sum_{i=1}^{H} \sum_{j=1}^{W} 
+\begin{cases}
+    (1 - p_{cij})^\alpha \log(p_{cij}) & \text{if } y_{cij} = 1 \\
+    (1 - y_{cij})^\beta (p_{cij})^\alpha \log(1 - p_{cij}) & \text{otherwise}
+\end{cases}$$
+
+Where $N$ is the number of objects in the image, $C$ is the number of classes, $H$ and $W$ are the width and height of the feature map, and $p_cij$ plus $y_cij$ are predicted score and gt score at location $(i, j)$ respectively. $α$ and $β$ are hyperparams. It is **important** to mention that $y_cij$ (and the predicted $p_cij$ as well) is represented as Gaussian bumps, meaning they represent decreasing confidence levels as the location moves away from the actual keypoint.
+
 
 $L_\text{pull}$ is used to group corners from the same object to have as similar embedding as possible. Let  $e_{tk}$ be the embedding for the top-left corner of object $k$ and $e_{bk}$ be for the bottom-right corner and $e_k$ is the average of $e_{tk}$ and $e_{bk}$.
 
@@ -88,3 +95,5 @@ $$ L_\text{pull} = \frac{1}{N} \sum_{k=1}^{N} \left[ (e_{tk} - e_k)^2 + (e_{bk} 
 $L_\text{push}$ is used to push the unrelated points' embedding far from eachother. $\Delta$ was set to 1.
 
 $$L_{\text{push}} = \frac{1}{N (N - 1)} \sum_{k=1}^{N} \sum_{\substack{j=1 \\ j \ne k}}^{N} \max(0, \Delta - |e_k - e_j|)$$
+
+$L_{off}^{co}$ and $L_{off}^{ce}$ are $l_1$-losses, which are used to train the network to predict the offsets of corners and center keypoints, respectively.
