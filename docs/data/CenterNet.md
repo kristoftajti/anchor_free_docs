@@ -1,20 +1,3 @@
-<!-- Button to go back to the main page -->
-<div style="margin-top: 20px;">
-  <a href="../" style="text-decoration: none;">
-    <button style="
-      background-color: #4CAF50; /* Green */
-      border: none;
-      color: white;
-      padding: 10px 20px;
-      text-align: center;
-      text-decoration: none;
-      display: inline-block;
-      font-size: 16px;
-      cursor: pointer;
-    ">Back to Main Page</button>
-  </a>
-</div>
-
 # CenterNet paper review
 ### official link - [https://arxiv.org/pdf/1904.08189](https://arxiv.org/pdf/1904.08189)
 
