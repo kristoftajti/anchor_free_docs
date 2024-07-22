@@ -1,7 +1,7 @@
 # FCOS code review
 ### official link - [https://github.com/tianzhi0549/FCOS/tree/master/](https://github.com/tianzhi0549/FCOS/tree/master/)
 
-#### FCOSModule
+#### FCOSModule - FCOS/fcos_core/modeling/rpn/fcos/fcos.py
 
 Includes the FCOShead, loss_evaluator, and the box_selector_test, which is only used when running inference.
 
@@ -55,7 +55,7 @@ Then the **_forward_train** function calculates classification, regression and c
 
 
 
-### FCOSHead
+### FCOSHead - FCOS/fcos_core/modeling/rpn/fcos/fcos.py
 
 The head is instansiated in the FCOSModule, with in_channels param, which is a hyper-parameter. We have two "towers", one for classification and one for regression, both with $N$ number of $inchannel \times inchannel$  convolutions.
 
@@ -107,7 +107,7 @@ def forward(self, x):
     return logits, bbox_reg, centerness
 ````
 
-### FCOSLoss
+### FCOSLoss - FCOS/fcos_core/modeling/rpn/fcos/loss.py
 
 The loss **call** function starts of with preparing the targets.
 

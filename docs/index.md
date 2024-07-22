@@ -3,6 +3,5 @@
     - [FCOS: Code](data/FCOS_code.md) 
 - [CenterNet: Keypoint Triplets for Object Detection](data/CenterNet.md)
 
-- [YOLOX: Exceeding YOLO Series in 2021](data/YoloX.md)
-
+- YoloX paper review 
     - [YOLOX: Code](data/YoloX_code.md)

@@ -4,7 +4,9 @@
 
 YoloX is an anchor-free Yolo version from 2021. This review will focus on the anchor-free part of the repo.
 
-### Forward - yolox.py
+In this paper and implementation (and in most of them), anchor refers to anchor-points.
+
+### Forward - YOLOX/yolox/models/yolox.py
 
 In the aforementioned file, happens the forward pass through the backbone and the head as well
 
@@ -21,11 +23,13 @@ outputs = self.head(fpn_outs)
 
 As the backbone is pretty standard, I won't cover it here, in case one is interested, feel free to check it out. 
 
-### Decoupled head - yolo_head.py
+### Decoupled head - YOLOX/yolox/models/yolo_head.py
 
-TODO!!
+I don't think that the code is needed here, it builds just as shown in the paper, in the head init, with separated regression and classification branch each head, paired with two 3x3 convs. Therefore the image below shows, how the head looks. 
 
-### Forward - yolo_head.py
+![decoupled_head](../assets/images/decoupled_head.png)
+
+### Forward - YOLOX/yolox/models/yolo_head.py
 
 Important to know, that stride_level is stored in the head in a list. This is to map the neck feature map back to the original image, similar to what is happening in FCOS.
 
@@ -119,16 +123,16 @@ def get_losses(...):
             cls_preds,
             obj_preds,
         )
-        # gt_matched_classes - TODO
-        # fg_mask - 
-        # pred_ious_this_matching -
-        # matched_gt_inds - 
-        # num_fg_img -
+        # gt_matched_classes - gt classes for each anchor
+        # fg_mask - mask for all the neck featuremap (all (i,j)), showing which (i,j) is used as anchor
+        # pred_ious_this_matching - ious between anchor and gts
+        # matched_gt_inds - gt indexes for each anchor
+        # num_fg_img - number of foreground anchors
         ...
         cls_target = F.one_hot(
             gt_matched_classes.to(torch.int64), self.num_classes
         ) * pred_ious_this_matching.unsqueeze(-1) # weighting the one-hot with IoU to scale by the quality of the pred!
-        reg_target = gt_bboxes_per_image[matched_gt_inds] # TODO
+        reg_target = gt_bboxes_per_image[matched_gt_inds] # Take as manny of each gt as anchor is paired to it
 
         ...
 

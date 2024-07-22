@@ -30,6 +30,9 @@ which are distances from location $(x, y)$ to the four sides of the bounding box
 $ l^* = x - x_0^{(i)}, \quad t^* = y - y_0^{(i)}, \quad r^* = x_1^{(i)} - x, \quad b^* = y_1^{(i)} - y $
 
 
+![ltrb](../assets/images/ltrb.png)
+
+
 In case an $(x, y)$ location falls into multiple GT boxes, it is considered an ambigous example, and the GT box with the smallest area is chosen as the target. This is beacuse  a smaller bounding box is likely to provide a more precise and localized prediction. To solve the problem of dropping GTs FCOS uses multi-level prediction, but this is discussed later on.
 
 In the network output, all targets are positive and due to this reason, all $x$ are mapped to the range $[0,∞]$ with $exp(x)$
