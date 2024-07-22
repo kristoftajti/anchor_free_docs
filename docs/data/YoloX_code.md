@@ -21,6 +21,10 @@ outputs = self.head(fpn_outs)
 
 As the backbone is pretty standard, I won't cover it here, in case one is interested, feel free to check it out. 
 
+### Decoupled head - yolo_head.py
+
+TODO!!
+
 ### Forward - yolo_head.py
 
 Important to know, that stride_level is stored in the head in a list. This is to map the neck feature map back to the original image, similar to what is happening in FCOS.
@@ -115,7 +119,7 @@ def get_losses(...):
             cls_preds,
             obj_preds,
         )
-        # gt_matched_classes -
+        # gt_matched_classes - TODO
         # fg_mask - 
         # pred_ious_this_matching -
         # matched_gt_inds - 
@@ -124,7 +128,7 @@ def get_losses(...):
         cls_target = F.one_hot(
             gt_matched_classes.to(torch.int64), self.num_classes
         ) * pred_ious_this_matching.unsqueeze(-1) # weighting the one-hot with IoU to scale by the quality of the pred!
-        reg_target = gt_bboxes_per_image[matched_gt_inds] # 
+        reg_target = gt_bboxes_per_image[matched_gt_inds] # TODO
 
         ...
 
@@ -165,7 +169,8 @@ def get_losses(...):
 
 ````python
 def get_assignments(...):
-    # fg_mask - check if given "anchor" (i,j coord in fpn featuremap) is in any gtbox (tensor with shape grid*grid, True where i,j is used, and false elsewhere), helps in focusing the loss calculation and gradient updates only on the grid cells that contain objects
+    # fg_mask - check if given "anchor" (i,j coord in fpn featuremap) is in any gtbox
+    # row vector with shape grid*grid, True where i,j is used, and false elsewhere, helps in focusing the loss calculation and gradient updates only on the grid cells that contain objects
     # geometry_relation - valid anchors for each gt boxes
     # geometry_relation -> gt_boxes x all_valid_anchors
     fg_mask, geometry_relation = self.get_geometry_constraint(
@@ -181,7 +186,8 @@ def get_assignments(...):
 
     pair_wise_ious = bboxes_iou(gt_bboxes_per_image, bboxes_preds_per_image, False) # iou between gt and preds (all gts and all preds)
 
-    pair_wise_ious_loss = -torch.log(pair_wise_ious + 1e-8) # Why like this? idk
+    pair_wise_ious_loss = -torch.log(pair_wise_ious + 1e-8) # neg log loss to heavily penalize small ious
+    # in case all ious are 1 or rlly close to 1(not likely but who knows), we could end up with negative loss - I believe this is why cost has a float addition 
 
     pair_wise_cls_loss = F.binary_cross_entropy(
         cls_preds_.unsqueeze(0).repeat(num_gt, 1, 1),
@@ -193,7 +199,7 @@ def get_assignments(...):
         pair_wise_cls_loss
         + 3.0 * pair_wise_ious_loss
         + float(1e6) * (~geometry_relation)
-    ) # take only those losses into consideration where the anchor is valid (check get_geometry_constraint for further info)
+    ) # take only those losses into consideration where the anchor is valid for the given gt(check get_geometry_constraint for further info)
     # cost is to determine which pred gt pairs are better
     # cost.shape - num_gts x num_preds, so prediction cost for each gt
 
@@ -216,7 +222,7 @@ def get_assignments(...):
 
 ````python
 def get_geometry_constraint(...):
-    # map center each neck featuremap level (i,j) to the original image 
+    # map the center of each neck featuremap level (i,j) to the original image 
     x_centers_per_image = ((x_shifts[0] + 0.5) * expanded_strides_per_image).unsqueeze(0) # centers in respect to the orig img
     y_centers_per_image = ((y_shifts[0] + 0.5) * expanded_strides_per_image).unsqueeze(0) # centers in respect to the orig img
 
@@ -229,17 +235,17 @@ def get_geometry_constraint(...):
     gt_bboxes_per_image_b = (gt_bboxes_per_image[:, 1:2]) + center_dist # calculation of center region barrier on axis x
     
 
-    # calculating the actual center regions for boxes on the img
+    # calculating the relations of center regions to the mapped centers
     c_l = x_centers_per_image - gt_bboxes_per_image_l
     c_r = gt_bboxes_per_image_r - x_centers_per_image
     c_t = y_centers_per_image - gt_bboxes_per_image_t
     c_b = gt_bboxes_per_image_b - y_centers_per_image
 
     center_deltas = torch.stack([c_l, c_t, c_r, c_b], 2)
-    # check whether the mapped centers are in the accepted center range
-    is_in_centers = center_deltas.min(dim=-1).values > 0.0 
+   
+    is_in_centers = center_deltas.min(dim=-1).values > 0.0  # check whether the mapped centers are in the accepted center range
     anchor_filter = is_in_centers.sum(dim=0) > 0 # check if given "anchor" (i,j coord in fpn featuremap) is in any gtbox
-    geometry_relation = is_in_centers[:, anchor_filter] # valid anchors for each gt boxes
+    geometry_relation = is_in_centers[:, anchor_filter] # valid anchors for each gt boxes respectively
 
     return anchor_filter, geometry_relation
 ````
@@ -278,7 +284,7 @@ def simota_matching(...):
         fg_mask_inboxes
     ]
 
-    # numfg - number of foreground anchors - anchros selected for gts
+    # numfg - number of foreground anchors - anchors selected for gts
     # gt_matched_classes - gt classes for each anchor
     # pred_ious_this_matching - ious between anchor and gts
     # matched_gt_inds - gt indexes for each anchor
